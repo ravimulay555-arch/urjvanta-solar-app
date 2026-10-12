@@ -1,1 +1,1 @@
-urjvanta-solar-app
+Urjvanta-Solar-App
