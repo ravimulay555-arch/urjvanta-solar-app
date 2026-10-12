@@ -1,1 +1,0 @@
-# urjvanta-solar-app
