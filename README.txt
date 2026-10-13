@@ -20,4 +20,4 @@ Build an APK:
 Notes:
 - Internet is not needed for the core screens; WhatsApp and calling need the relevant phone apps/network.
 - Solar sizing results are preliminary estimates, not a professional design or quotation.
-- Before public release, test on multiple Android phones and add a privacy policy if collecting customer information.
+- Before public release, test on multiple Android phones and add a privacy policy if collecting customer information. 
