@@ -1,60 +1,24 @@
-name: Build Urjvanta Solar APK
-
-on:
-  workflow_dispatch:
-  push:
-    paths:
-      - 'UrjvantaSolarProject.zip'
-      - '.github/workflows/build.yml'
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
 
       - name: Extract Android project ZIP
         run: |
-          ZIP_FILE="$(find . -maxdepth 2 -type f -iname '*.zip' ! -path './.git/*' | head -n 1)"
-          if [ -z "$ZIP_FILE" ]; then
-            echo 'ERROR: No ZIP file found in repository.'
+          set -e
+          ZIP_FILE="./UrjvantaSolarProject.zip"
+
+          if [ ! -f "$ZIP_FILE" ]; then
+            echo "ERROR: UrjvantaSolarProject.zip not found in repository root."
+            ls -la
             exit 1
           fi
-          mkdir extracted
-          unzip -q "$ZIP_FILE" -d extracted
+
+          mkdir -p extracted
+          unzip -o "$ZIP_FILE" -d extracted
+
           SETTINGS_FILE="$(find extracted -type f \( -name settings.gradle -o -name settings.gradle.kts \) | head -n 1)"
+
           if [ -z "$SETTINGS_FILE" ]; then
-            echo 'ERROR: settings.gradle not found inside ZIP.'
+            echo "ERROR: Android Gradle project not found. settings.gradle is missing."
+            find extracted -maxdepth 4 -type f | head -n 100
             exit 1
           fi
+
           echo "PROJECT_DIR=$(dirname "$SETTINGS_FILE")" >> "$GITHUB_ENV"
-
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Build debug APK
-        run: |
-          cd "$PROJECT_DIR"
-          if [ -f gradlew ]; then
-            chmod +x gradlew
-            ./gradlew assembleDebug
-          else
-            gradle assembleDebug
-          fi
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: UrjvantaSolar-debug-APK
-          path: '**/build/outputs/apk/debug/*.apk'
-          if-no-files-found: error
