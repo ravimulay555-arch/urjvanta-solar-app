@@ -1,5 +1,5 @@
 
-      - name: Extract Android project ZIP
+      - name: Extract Android project.ZIP
         run: |
           set -e
           ZIP_FILE="./UrjvantaSolarProject.zip"
