@@ -1,0 +1,49 @@
+name: Build Urjvanta Solar APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/build.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build APK
+        run: |
+          if [ -f settings.gradle ] || [ -f settings.gradle.kts ]; then
+            PROJECT_DIR=.
+          else
+            PROJECT_DIR="$(dirname "$(find . -name settings.gradle -o -name settings.gradle.kts | head -n 1)")"
+          fi
+          if [ -z "$PROJECT_DIR" ] || [ "$PROJECT_DIR" = "." -a ! -f settings.gradle -a ! -f settings.gradle.kts ]; then
+            echo 'Android project not found: settings.gradle is missing.'
+            exit 1
+          fi
+          cd "$PROJECT_DIR"
+          if [ -f gradlew ]; then
+            chmod +x gradlew
+            ./gradlew assembleDebug
+          else
+            gradle assembleDebug
+          fi
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: UrjvantaSolar-debug-APK
+          path: '**/build/outputs/apk/debug/*.apk'
+          if-no-files-found: error
