@@ -1,0 +1,15 @@
+Urjvanta Solar Energy - Android APK build
+
+IMPORTANT: This ZIP contains Android source code, not a prebuilt APK.
+
+A cloud build workflow is included at .github/workflows/build-apk.yml. To use it, the project files must be uploaded into a GitHub repository (not uploaded as a ZIP file).
+
+After the project files are in a GitHub repository:
+1. Open the repository in your browser.
+2. Open the Actions tab and enable workflows if GitHub asks.
+3. Choose “Build Urjvanta Solar APK”.
+4. Tap “Run workflow”.
+5. When the run finishes successfully, open the run and download the “UrjvantaSolar-debug-apk” artifact.
+6. Extract the downloaded artifact ZIP; install app-debug.apk on your Android phone. You may need to allow your browser/file manager to install unknown apps.
+
+Only install APKs you trust. This is a debug APK for personal testing, not a Play Store release.
